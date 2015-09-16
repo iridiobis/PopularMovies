@@ -1,4 +1,29 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
+    }
+}
+
 apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'com.jakewharton.hugo'
+
+Map<String, String> versions = [
+        support         : '23.0.1',
+        butterknife     : '7.0.1',
+        dagger          : '2.0.1',
+        retrofit        : '2.0.0-beta1',
+        javax_annotation: '10.0-b28',
+        guava           : '19.0-rc1',
+        rxjava          : '1.0.14',
+        rxandroid       : '1.0.1'
+]
 
 android {
     compileSdkVersion 23
@@ -11,6 +36,9 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    android.buildTypes.each { type ->
+        type.buildConfigField 'String', 'THE_MOVIE_DB_API_KEY', themoviedbApiKey
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -21,5 +49,15 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile "com.android.support:appcompat-v7:$versions.support"
+    compile "com.squareup.retrofit:retrofit:$versions.retrofit"
+    compile "com.squareup.retrofit:adapter-rxjava:$versions.retrofit"
+    compile "com.squareup.retrofit:converter-gson:$versions.retrofit"
+    compile "io.reactivex:rxandroid:$versions.rxandroid"
+    compile "io.reactivex:rxjava:$versions.rxjava"
+    compile "com.google.guava:guava:$versions.guava"
+    compile "com.google.dagger:dagger:$versions.dagger"
+    apt "com.google.dagger:dagger-compiler:$versions.dagger"
+    provided "org.glassfish:javax.annotation:$versions.javax_annotation"
+
 }
