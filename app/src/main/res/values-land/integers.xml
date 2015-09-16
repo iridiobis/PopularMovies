@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 3 looks better, but as each page received has 20 items...-->
+    <integer name="movies_grid_columns">4</integer>
+</resources>
