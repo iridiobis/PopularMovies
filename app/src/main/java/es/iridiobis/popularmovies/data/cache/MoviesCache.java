@@ -3,6 +3,7 @@ package es.iridiobis.popularmovies.data.cache;
 import android.util.SparseArray;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,13 @@ import rx.functions.Func1;
 @Singleton
 public class MoviesCache implements MoviesRepository {
     private static final int MOVIES_PER_PAGE = 20;
+    /**
+     * The movies list contains the ORDERED list of movies.
+     */
+    private final List<Movie> movies;
+    /**
+     * Sparse array to access the movies by id
+     */
     private final SparseArray<Movie> movieSparseArray;
     private final TheMovieDbService service;
 
@@ -34,6 +42,7 @@ public class MoviesCache implements MoviesRepository {
     public MoviesCache(final Retrofit retrofit) {
         this.service = retrofit.create(TheMovieDbService.class);
         this.movieSparseArray = new SparseArray<>(MOVIES_PER_PAGE);
+        this.movies = new ArrayList<>(MOVIES_PER_PAGE);
     }
 
     @Override
@@ -42,7 +51,7 @@ public class MoviesCache implements MoviesRepository {
             return requestAndCache(mode);
         } else {
             return Observable.concat(
-                    Observable.just(asList(movieSparseArray)),
+                    Observable.just(ImmutableList.copyOf(movies)),
                     requestAndCache(mode)
             );
         }
@@ -68,6 +77,8 @@ public class MoviesCache implements MoviesRepository {
                 .doOnNext(new Action1<List<Movie>>() {
                     @Override
                     public void call(List<Movie> movies) {
+                        MoviesCache.this.movies.clear();
+                        MoviesCache.this.movies.addAll(movies);
                         for (Movie movie : movies) {
                             movieSparseArray.put(movie.getId(), movie);
                         }
@@ -77,11 +88,4 @@ public class MoviesCache implements MoviesRepository {
                 .onErrorResumeNext(Observable.<List<Movie>>empty());
     }
 
-    private List<Movie> asList(SparseArray<Movie> sparseArray) {
-        if (sparseArray == null) return null;
-        final List<Movie> arrayList = new ArrayList<>(sparseArray.size());
-        for (int i = 0; i < sparseArray.size(); i++)
-            arrayList.add(sparseArray.valueAt(i));
-        return arrayList;
-    }
 }

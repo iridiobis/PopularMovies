@@ -1,6 +1,6 @@
 package es.iridiobis.popularmovies.android;
 
-import es.iridiobis.popularmovies.MainActivity;
+import es.iridiobis.popularmovies.presentation.MainActivity;
 
 /**
  * Created by iridio on 16/09/15.

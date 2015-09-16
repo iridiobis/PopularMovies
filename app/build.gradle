@@ -21,6 +21,7 @@ Map<String, String> versions = [
         retrofit        : '2.0.0-beta1',
         javax_annotation: '10.0-b28',
         guava           : '19.0-rc1',
+        picasso: '2.5.2',
         rxjava          : '1.0.14',
         rxandroid       : '1.0.1'
 ]
@@ -56,8 +57,12 @@ dependencies {
     compile "io.reactivex:rxandroid:$versions.rxandroid"
     compile "io.reactivex:rxjava:$versions.rxjava"
     compile "com.google.guava:guava:$versions.guava"
+    compile "com.squareup.picasso:picasso:$versions.picasso"
     compile "com.google.dagger:dagger:$versions.dagger"
+    compile "com.jakewharton:butterknife:$versions.butterknife"
+
     apt "com.google.dagger:dagger-compiler:$versions.dagger"
     provided "org.glassfish:javax.annotation:$versions.javax_annotation"
+
 
 }
