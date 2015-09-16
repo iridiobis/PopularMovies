@@ -9,7 +9,7 @@ import rx.Observable;
  * Created by iridio on 16/09/15.
  */
 public interface MoviesRepository {
-    Observable<List<Movie>> getMovies(String mode);
+    Observable<List<Movie>> getMovies(String mode, boolean refresh);
 
     Observable<Movie> getMovie(int movieId);
 }

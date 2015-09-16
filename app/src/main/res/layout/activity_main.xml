@@ -1,5 +1,5 @@
-<android.support.v4.widget.SwipeRefreshLayout
-    android:id="@+id/refresh_layout"
+<es.iridiobis.popularmovies.presentation.movies.MoviesView
+    android:id="@+id/movies"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,4 +12,4 @@
         android:layout_height="match_parent"
         android:numColumns="@integer/movies_grid_columns"/>
 
-</android.support.v4.widget.SwipeRefreshLayout>
+</es.iridiobis.popularmovies.presentation.movies.MoviesView>

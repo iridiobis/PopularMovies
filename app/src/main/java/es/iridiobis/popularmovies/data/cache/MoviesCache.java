@@ -46,14 +46,17 @@ public class MoviesCache implements MoviesRepository {
     }
 
     @Override
-    public Observable<List<Movie>> getMovies(final String mode) {
+    public Observable<List<Movie>> getMovies(final String mode, final boolean refresh) {
+        //TODO define a TTL for the cached data
         if (movieSparseArray.size() == 0) {
             return requestAndCache(mode);
-        } else {
+        } else if (refresh) {
             return Observable.concat(
                     Observable.just(ImmutableList.copyOf(movies)),
                     requestAndCache(mode)
             );
+        } else {
+            return Observable.<List<Movie>>just(ImmutableList.copyOf(movies));
         }
     }
 
@@ -83,9 +86,7 @@ public class MoviesCache implements MoviesRepository {
                             movieSparseArray.put(movie.getId(), movie);
                         }
                     }
-                })
-                        //Simplest error policy
-                .onErrorResumeNext(Observable.<List<Movie>>empty());
+                });
     }
 
 }
