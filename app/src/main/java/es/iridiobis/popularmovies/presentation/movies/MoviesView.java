@@ -73,4 +73,12 @@ public class MoviesView extends SwipeRefreshLayout {
     public void setMovies(final List<Movie> movies) {
         adapter.setMovies(movies);
     }
+
+    public int getFirstVisiblePosition() {
+        return moviesGrid.getFirstVisiblePosition();
+    }
+
+    public void setSelectionFromTop(int firstVisiblePosition) {
+        moviesGrid.setSelection(firstVisiblePosition);
+    }
 }
