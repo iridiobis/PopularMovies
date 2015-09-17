@@ -3,6 +3,8 @@ package es.iridiobis.popularmovies.presentation;
 import android.os.Bundle;
 import android.view.View;
 
+import hugo.weaving.DebugLog;
+
 /**
  * Created by iridio on 16/09/15.
  */
@@ -20,6 +22,7 @@ public abstract class Presenter<T extends View> {
     public void onEnterScope(final Bundle bundle) {
     }
 
+    @DebugLog
     public final void takeView(final T view) {
         this.view = view;
         onLoad();
@@ -27,6 +30,7 @@ public abstract class Presenter<T extends View> {
 
     public abstract void onLoad();
 
+    @DebugLog
     public final void dropView() {
         this.view = null;
     }

@@ -32,10 +32,12 @@ public class MoviesView extends SwipeRefreshLayout {
 
     public MoviesView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        //TODO this has to change, create view (fragment? :S) scoped components that depend on PMC
-        PopularMoviesApplication.get(context).getComponent().inject(this);
-        setOnRefreshListener(presenter);
-        adapter = new MoviesAdapter(context);
+        if (!isInEditMode()) {
+            //TODO this has to change, create view (fragment? :S) scoped components that depend on PMC
+            PopularMoviesApplication.get(context).getComponent().inject(this);
+            setOnRefreshListener(presenter);
+            adapter = new MoviesAdapter(context);
+        }
     }
 
     @Override

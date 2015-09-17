@@ -5,6 +5,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import es.iridiobis.popularmovies.domain.model.Movie;
 import es.iridiobis.popularmovies.domain.repositories.MovieDiscoveryMode;
@@ -18,9 +19,13 @@ import rx.schedulers.Schedulers;
 /**
  * Created by iridio on 16/09/15.
  */
+//TODO change scope
+@Singleton
 public class MoviesPresenter extends Presenter<MoviesView> implements SwipeRefreshLayout.OnRefreshListener {
 
     private final MoviesRepository repository;
+
+    private String sortMode = MovieDiscoveryMode.POPULARITY;
 
     @Inject
     public MoviesPresenter(MoviesRepository repository) {
@@ -66,9 +71,18 @@ public class MoviesPresenter extends Presenter<MoviesView> implements SwipeRefre
 
         getView().setRefreshing(true);
 
-        repository.getMovies(MovieDiscoveryMode.POPULARITY, refresh)
+        repository.getMovies(sortMode, refresh)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(onNext, onError, onComplete);
+    }
+
+    public String getSortMode() {
+        return sortMode;
+    }
+
+    public void setSortMode(final String sortMode) {
+        this.sortMode = sortMode;
+        discoverMovies(true);
     }
 }

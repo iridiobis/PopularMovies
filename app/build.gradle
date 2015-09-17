@@ -51,6 +51,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "com.android.support:appcompat-v7:$versions.support"
+    compile "com.android.support:design:$versions.support"
     compile "com.squareup.retrofit:retrofit:$versions.retrofit"
     compile "com.squareup.retrofit:adapter-rxjava:$versions.retrofit"
     compile "com.squareup.retrofit:converter-gson:$versions.retrofit"
