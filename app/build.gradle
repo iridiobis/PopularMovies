@@ -21,7 +21,7 @@ Map<String, String> versions = [
         retrofit        : '2.0.0-beta1',
         javax_annotation: '10.0-b28',
         guava           : '19.0-rc1',
-        picasso: '2.5.2',
+        picasso         : '2.5.2',
         rxjava          : '1.0.14',
         rxandroid       : '1.0.1'
 ]
@@ -66,4 +66,6 @@ dependencies {
     provided "org.glassfish:javax.annotation:$versions.javax_annotation"
 
 
+    compile 'com.android.support:support-v4:23.1.0'
+    compile 'com.android.support:design:23.1.0'
 }
