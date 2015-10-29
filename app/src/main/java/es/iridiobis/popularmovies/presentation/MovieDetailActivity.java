@@ -1,5 +1,6 @@
 package es.iridiobis.popularmovies.presentation;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +13,7 @@ import android.view.MenuItem;
 import es.iridiobis.popularmovies.R;
 
 /**
- * An activity representing a single Item detail screen. This
+ * An activity representing a single Movie detail screen. This
  * activity is only used on handset devices. On tablet-size devices,
  * item details are presented side-by-side with a list of items
  * in a {@link ItemListActivity}.
@@ -21,6 +22,12 @@ import es.iridiobis.popularmovies.R;
  * more than a {@link MovieDetailFragment}.
  */
 public class MovieDetailActivity extends AppCompatActivity {
+
+    public final static Intent startIntent(final Context context, final int movieId) {
+        final Intent intent = new Intent(context, MovieDetailActivity.class);
+        intent.putExtra(MovieDetailFragment.ARG_MOVIE_ID, movieId);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +40,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Replace with your own detail action " + getIntent().getIntExtra(MovieDetailFragment.ARG_MOVIE_ID, MovieDetailFragment.NO_MOVIE), Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -53,11 +60,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putString(MovieDetailFragment.ARG_MOVIE_ID,
-                    getIntent().getStringExtra(MovieDetailFragment.ARG_MOVIE_ID));
-            MovieDetailFragment fragment = new MovieDetailFragment();
-            fragment.setArguments(arguments);
+            final MovieDetailFragment fragment = MovieDetailFragment.newInstance(
+                    getIntent().getIntExtra(MovieDetailFragment.ARG_MOVIE_ID, MovieDetailFragment.NO_MOVIE));
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.item_detail_container, fragment)
                     .commit();

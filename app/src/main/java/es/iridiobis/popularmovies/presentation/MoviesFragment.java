@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -86,6 +87,12 @@ public class MoviesFragment extends Fragment {
         ButterKnife.bind(this, view);
         adapter = new MoviesAdapter(getActivity());
         moviesGrid.setAdapter(adapter);
+        moviesGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                mListener.onFragmentInteraction(((Movie) adapter.getItem(i)).getId());
+            }
+        });
         discoverMovies(true);
         return view;
     }
@@ -163,8 +170,7 @@ public class MoviesFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        public void onFragmentInteraction(int selectedMovieId);
     }
 
 }

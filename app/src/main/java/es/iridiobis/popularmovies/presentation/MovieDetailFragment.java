@@ -23,12 +23,28 @@ public class MovieDetailFragment extends Fragment {
      * represents.
      */
     public static final String ARG_MOVIE_ID = "movie_id";
+    public static final int NO_MOVIE = -1;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
     public MovieDetailFragment() {
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param movieId              Id of the movie to display
+     * @return A new instance of fragment MovieDetailFragment.
+     */
+    public static MovieDetailFragment newInstance(final int movieId) {
+        MovieDetailFragment fragment = new MovieDetailFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_MOVIE_ID, movieId);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
