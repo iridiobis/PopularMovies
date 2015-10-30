@@ -8,8 +8,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.List;
+
+import javax.inject.Inject;
 
 import es.iridiobis.popularmovies.R;
+import es.iridiobis.popularmovies.android.PopularMoviesApplication;
+import es.iridiobis.popularmovies.domain.model.Movie;
+import es.iridiobis.popularmovies.domain.repositories.MoviesRepository;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * A fragment representing a single Item detail screen.
@@ -24,6 +36,9 @@ public class MovieDetailFragment extends Fragment {
      */
     public static final String ARG_MOVIE_ID = "movie_id";
     public static final int NO_MOVIE = -1;
+
+    @Inject
+    MoviesRepository repository;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -50,14 +65,10 @@ public class MovieDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PopularMoviesApplication.get(getActivity()).getComponent().inject(this);
 
         if (getArguments().containsKey(ARG_MOVIE_ID)) {
-
-            Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-            if (appBarLayout != null) {
-                //appBarLayout.setTitle(mItem.content);
-            }
+            discoverMovie(getArguments().getInt(ARG_MOVIE_ID));
         }
     }
 
@@ -73,4 +84,45 @@ public class MovieDetailFragment extends Fragment {
 
         return rootView;
     }
+
+    private void discoverMovie(final int movieId) {
+
+        final Action1<Movie> onNext = new Action1<Movie>() {
+            @Override
+            public void call(Movie movie) {
+                Activity activity = getActivity();
+                CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
+                if (appBarLayout != null) {
+                    appBarLayout.setTitle(movie.getOriginalTitle());
+                }
+            }
+        };
+
+        final Action1<Throwable> onError = new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                //TODO setRefreshing(false);
+                showErrorFetchingMovie();
+            }
+        };
+
+        final Action0 onComplete = new Action0() {
+            @Override
+            public void call() {
+                //TODO setRefreshing(false);
+            }
+        };
+
+        //TODO setRefreshing(true);
+
+        repository.getMovie(movieId)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(onNext, onError, onComplete);
+    }
+
+    private void showErrorFetchingMovie() {
+        Toast.makeText(getActivity(), "Error fetching movie", Toast.LENGTH_LONG).show();
+    }
+
 }

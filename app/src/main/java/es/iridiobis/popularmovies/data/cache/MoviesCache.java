@@ -66,7 +66,7 @@ public class MoviesCache implements MoviesRepository {
         if (movie.isPresent())
             return Observable.just(movie.get());
         else
-            return Observable.empty();
+            return service.discoverMovie(movieId, BuildConfig.THE_MOVIE_DB_API_KEY);
     }
 
     private Observable<List<Movie>> requestAndCache(final String mode) {

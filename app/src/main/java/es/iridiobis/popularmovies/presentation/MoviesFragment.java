@@ -123,7 +123,6 @@ public class MoviesFragment extends Fragment {
 
     public void showErrorFetchingMovies() {
         Toast.makeText(getActivity(), "Error fetching movies", Toast.LENGTH_LONG).show();
-
     }
 
     private void discoverMovies(final boolean refresh) {
