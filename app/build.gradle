@@ -23,7 +23,8 @@ Map<String, String> versions = [
         guava           : '19.0-rc1',
         picasso         : '2.5.2',
         rxjava          : '1.0.14',
-        rxandroid       : '1.0.1'
+        rxandroid       : '1.0.1',
+        stetho          : '1.2.0'
 ]
 
 android {
@@ -61,6 +62,9 @@ dependencies {
     compile "com.squareup.picasso:picasso:$versions.picasso"
     compile "com.google.dagger:dagger:$versions.dagger"
     compile "com.jakewharton:butterknife:$versions.butterknife"
+    compile "com.facebook.stetho:stetho:$versions.stetho"
+    compile "com.facebook.stetho:stetho-okhttp:$versions.stetho"
+
 
     apt "com.google.dagger:dagger-compiler:$versions.dagger"
     provided "org.glassfish:javax.annotation:$versions.javax_annotation"

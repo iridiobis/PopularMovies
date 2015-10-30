@@ -3,6 +3,8 @@ package es.iridiobis.popularmovies.android;
 import android.app.Application;
 import android.content.Context;
 
+import com.facebook.stetho.Stetho;
+
 /**
  * Created by iridio on 16/09/15.
  */
@@ -17,6 +19,10 @@ public class PopularMoviesApplication extends Application {
     public void onCreate() {
         super.onCreate();
         component = DaggerPopularMoviesComponent.builder().build();
+        Stetho.initialize(Stetho.newInitializerBuilder(this)
+                .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
+                .build());
+
     }
 
     public PopularMoviesComponent getComponent() {
