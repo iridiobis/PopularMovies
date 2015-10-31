@@ -1,19 +1,20 @@
 package es.iridiobis.popularmovies.presentation;
 
-import android.app.Activity;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.util.List;
+import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import es.iridiobis.popularmovies.R;
 import es.iridiobis.popularmovies.android.PopularMoviesApplication;
 import es.iridiobis.popularmovies.domain.model.Movie;
@@ -36,9 +37,16 @@ public class MovieDetailFragment extends Fragment {
      */
     public static final String ARG_MOVIE_ID = "movie_id";
     public static final int NO_MOVIE = -1;
+    //TODO create class to handle images urls and sizes
+    private final static String BACKDROP_URL_ROOT = "http://image.tmdb.org/t/p/w500/%s";
+
 
     @Inject
     MoviesRepository repository;
+    @Bind(R.id.toolbar_layout)
+    CollapsingToolbarLayout toolbarLayout;
+    @Bind(R.id.backdrop)
+    ImageView backdrop;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -51,7 +59,7 @@ public class MovieDetailFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param movieId              Id of the movie to display
+     * @param movieId Id of the movie to display
      * @return A new instance of fragment MovieDetailFragment.
      */
     public static MovieDetailFragment newInstance(final int movieId) {
@@ -76,7 +84,7 @@ public class MovieDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_item_detail, container, false);
-
+        ButterKnife.bind(this, getActivity());
         // Show the dummy content as text in a TextView.
 //        if (mItem != null) {
 //            ((TextView) rootView.findViewById(R.id.item_detail)).setText(mItem.details);
@@ -90,11 +98,11 @@ public class MovieDetailFragment extends Fragment {
         final Action1<Movie> onNext = new Action1<Movie>() {
             @Override
             public void call(Movie movie) {
-                Activity activity = getActivity();
-                CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-                if (appBarLayout != null) {
-                    appBarLayout.setTitle(movie.getOriginalTitle());
-                }
+                toolbarLayout.setTitle(movie.getOriginalTitle());
+                toolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+                final String url = String.format(BACKDROP_URL_ROOT, movie.getBackdropPath());
+
+                Picasso.with(getActivity()).load(url).into(backdrop);
             }
         };
 
