@@ -1,0 +1,46 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16dp"
+                tools:context="es.iridiobis.popularmovies.presentation.MovieDetailFragment">
+
+  <ImageView
+    android:id="@+id/movie_detail_poster"
+    android:layout_width="@dimen/movie_detail_poster_width"
+    android:layout_height="@dimen/movie_detail_poster_height"
+    tools:background="#f00"/>
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignBottom="@id/movie_detail_poster"
+    android:layout_marginLeft="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_toEndOf="@id/movie_detail_poster"
+    android:layout_toRightOf="@id/movie_detail_poster"
+    android:orientation="vertical">
+
+    <TextView
+      android:id="@+id/movie_detail_title"
+      style="?android:attr/textAppearanceLarge"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      tools:text="El título de la película"/>
+
+    <TextView
+      android:id="@+id/movie_detail_year"
+      style="?android:attr/textAppearanceLarge"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      tools:text="2015"/>
+  </LinearLayout>
+
+  <TextView
+    android:id="@+id/movie_detail_overview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/movie_detail_poster"
+    android:layout_marginTop="8dp"
+    tools:text="Sinopsis de la película, o lo que sea que la página esa quiera traer"/>
+</RelativeLayout>

@@ -1,5 +1,6 @@
 package es.iridiobis.popularmovies.presentation;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
@@ -17,6 +19,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import es.iridiobis.popularmovies.R;
 import es.iridiobis.popularmovies.android.PopularMoviesApplication;
+import es.iridiobis.popularmovies.data.api.TheMovieDbImageUriBuilder;
 import es.iridiobis.popularmovies.domain.model.Movie;
 import es.iridiobis.popularmovies.domain.repositories.MoviesRepository;
 import rx.android.schedulers.AndroidSchedulers;
@@ -43,9 +46,17 @@ public class MovieDetailFragment extends Fragment {
 
     @Inject
     MoviesRepository repository;
-    @Bind(R.id.toolbar_layout)
+
     CollapsingToolbarLayout toolbarLayout;
-    @Bind(R.id.backdrop)
+    @Bind(R.id.movie_detail_title)
+    TextView titleView;
+    @Bind(R.id.movie_detail_year)
+    TextView yearView;
+    @Bind(R.id.movie_detail_overview)
+    TextView overviewView;
+    @Bind(R.id.movie_detail_poster)
+    ImageView posterView;
+
     ImageView backdropView;
 
     /**
@@ -83,8 +94,10 @@ public class MovieDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_item_detail, container, false);
-        ButterKnife.bind(this, getActivity());
+        View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
+        ButterKnife.bind(this, rootView);
+        toolbarLayout = ButterKnife.findById(getActivity(), R.id.toolbar_layout);
+        backdropView = ButterKnife.findById(getActivity(), R.id.movie_detail_backdrop);
         // Show the dummy content as text in a TextView.
 //        if (mItem != null) {
 //            ((TextView) rootView.findViewById(R.id.item_detail)).setText(mItem.details);
@@ -101,8 +114,13 @@ public class MovieDetailFragment extends Fragment {
                 toolbarLayout.setTitle(movie.getOriginalTitle());
                 toolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
+                titleView.setText(movie.getOriginalTitle());
+                yearView.setText(movie.getReleaseDate());
+                overviewView.setText(movie.getOverview());
                 final Uri backdropUrl = TheMovieDbImageUriBuilder.buildW500Image(movie.getPosterPath());
                 Picasso.with(getActivity()).load(backdropUrl).into(backdropView);
+                final Uri posterUrl = TheMovieDbImageUriBuilder.buildW185Image(movie.getPosterPath());
+                Picasso.with(getActivity()).load(posterUrl).into(posterView);
             }
         };
 
