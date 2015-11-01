@@ -46,7 +46,7 @@ public class MovieDetailFragment extends Fragment {
     @Bind(R.id.toolbar_layout)
     CollapsingToolbarLayout toolbarLayout;
     @Bind(R.id.backdrop)
-    ImageView backdrop;
+    ImageView backdropView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -100,9 +100,9 @@ public class MovieDetailFragment extends Fragment {
             public void call(Movie movie) {
                 toolbarLayout.setTitle(movie.getOriginalTitle());
                 toolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
-                final String url = String.format(BACKDROP_URL_ROOT, movie.getBackdropPath());
 
-                Picasso.with(getActivity()).load(url).into(backdrop);
+                final Uri backdropUrl = TheMovieDbImageUriBuilder.buildW500Image(movie.getPosterPath());
+                Picasso.with(getActivity()).load(backdropUrl).into(backdropView);
             }
         };
 
