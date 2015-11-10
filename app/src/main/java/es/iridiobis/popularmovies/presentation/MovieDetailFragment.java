@@ -52,6 +52,8 @@ public class MovieDetailFragment extends Fragment {
     TextView titleView;
     @Bind(R.id.movie_detail_year)
     TextView yearView;
+    @Bind(R.id.movie_detail_rating)
+    TextView ratingView;
     @Bind(R.id.movie_detail_overview)
     TextView overviewView;
     @Bind(R.id.movie_detail_poster)
@@ -116,6 +118,8 @@ public class MovieDetailFragment extends Fragment {
 
                 titleView.setText(movie.getOriginalTitle());
                 yearView.setText(movie.getReleaseDate());
+                //TODO make constant or res
+                ratingView.setText(String.format("%d/10", (long)movie.getVoteAverage()));
                 overviewView.setText(movie.getOverview());
                 final Uri backdropUrl = TheMovieDbImageUriBuilder.buildW500Image(movie.getPosterPath());
                 Picasso.with(getActivity()).load(backdropUrl).into(backdropView);

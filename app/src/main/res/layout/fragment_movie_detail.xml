@@ -1,40 +1,61 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="16dp"
-                tools:context="es.iridiobis.popularmovies.presentation.MovieDetailFragment">
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:padding="16dp"
+  tools:context="es.iridiobis.popularmovies.presentation.MovieDetailFragment">
 
   <ImageView
     android:id="@+id/movie_detail_poster"
     android:layout_width="@dimen/movie_detail_poster_width"
     android:layout_height="@dimen/movie_detail_poster_height"
-    tools:background="#f00"/>
+    android:layout_marginEnd="8dp"
+    android:layout_marginRight="8dp"
+    tools:background="#f00" />
 
-  <LinearLayout
+
+  <TextView
+    android:id="@+id/movie_detail_rating"
+    style="?android:attr/textAppearanceLarge"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_alignBottom="@id/movie_detail_poster"
-    android:layout_marginLeft="8dp"
-    android:layout_marginStart="8dp"
+    android:layout_alignTop="@id/movie_detail_poster"
+    android:layout_marginTop="8dp"
     android:layout_toEndOf="@id/movie_detail_poster"
     android:layout_toRightOf="@id/movie_detail_poster"
-    android:orientation="vertical">
+    tools:text="8/10" />
 
-    <TextView
-      android:id="@+id/movie_detail_title"
-      style="?android:attr/textAppearanceLarge"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      tools:text="El título de la película"/>
+  <TextView
+    android:id="@+id/year_label"
+    style="?android:attr/textAppearanceMedium"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignBottom="@id/movie_detail_poster"
+    android:layout_toEndOf="@id/movie_detail_poster"
+    android:layout_toRightOf="@id/movie_detail_poster"
+    android:text="Released on" />
 
-    <TextView
-      android:id="@+id/movie_detail_year"
-      style="?android:attr/textAppearanceLarge"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      tools:text="2015"/>
-  </LinearLayout>
+  <TextView
+    android:id="@+id/movie_detail_year"
+    style="?android:attr/textAppearanceLarge"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignBottom="@id/year_label"
+    android:layout_marginLeft="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_toEndOf="@id/year_label"
+    android:layout_toRightOf="@id/year_label"
+    tools:text="2015-03-16" />
+
+  <TextView
+    android:id="@+id/movie_detail_title"
+    style="?android:attr/textAppearanceLarge"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_above="@id/year_label"
+    android:layout_toEndOf="@id/movie_detail_poster"
+    android:layout_toRightOf="@id/movie_detail_poster"
+    tools:text="El título de la película" />
 
   <TextView
     android:id="@+id/movie_detail_overview"
@@ -42,5 +63,5 @@
     android:layout_height="wrap_content"
     android:layout_below="@id/movie_detail_poster"
     android:layout_marginTop="8dp"
-    tools:text="Sinopsis de la película, o lo que sea que la página esa quiera traer"/>
+    tools:text="Sinopsis de la película, o lo que sea que la página esa quiera traer" />
 </RelativeLayout>
