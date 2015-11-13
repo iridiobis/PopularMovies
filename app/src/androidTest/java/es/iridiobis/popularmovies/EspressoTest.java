@@ -39,6 +39,20 @@ public class EspressoTest {
     }
 
     @Test
+    public void changeSortingMode() {
+        // Type text and then press the button.
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withText(R.string.nav_by_rating)).perform(click());
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
+        onView(
+                allOf(
+                        isDescendantOfA(withId(R.id.toolbar)),
+                        withText(R.string.nav_by_rating)
+                )
+        ).check(matches(isDisplayed()));
+    }
+
+    @Test
     public void changeText_sameActivity() {
         // Type text and then press the button.
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
