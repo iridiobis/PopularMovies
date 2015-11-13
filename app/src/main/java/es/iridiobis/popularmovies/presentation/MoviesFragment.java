@@ -76,6 +76,11 @@ public class MoviesFragment extends Fragment {
             discoveryMode = getArguments().getString(ARG_DISCOVERY_MODE);
             firstVisiblePosition = getArguments().getInt(ARG_FIRST_VISIBLE_POSITION);
         }
+        getActivity().setTitle(
+                MovieDiscoveryMode.POPULARITY.equals(discoveryMode)
+                        ? R.string.nav_by_popularity
+                        : R.string.nav_by_rating
+        );
     }
 
     @Override
@@ -99,6 +104,7 @@ public class MoviesFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+
         try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
