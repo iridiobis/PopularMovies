@@ -16,7 +16,6 @@ import es.iridiobis.popularmovies.data.api.DiscoverMoviesResult;
 import es.iridiobis.popularmovies.data.api.TheMovieDbService;
 import es.iridiobis.popularmovies.domain.model.Movie;
 import es.iridiobis.popularmovies.domain.repositories.MoviesRepository;
-import retrofit.Retrofit;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -39,8 +38,8 @@ public class MoviesCache implements MoviesRepository {
     private final TheMovieDbService service;
 
     @Inject
-    public MoviesCache(final Retrofit retrofit) {
-        this.service = retrofit.create(TheMovieDbService.class);
+    public MoviesCache(final TheMovieDbService service) {
+        this.service = service;
         this.movieSparseArray = new SparseArray<>(MOVIES_PER_PAGE);
         this.movies = new ArrayList<>(MOVIES_PER_PAGE);
     }
