@@ -80,6 +80,8 @@ dependencies {
     compile "com.android.support:design:$versions.support"
 
     // Testing-only dependencies
+    androidTestCompile "com.squareup.retrofit:retrofit-mock:$versions.retrofit"
+    androidTestCompile ('com.squareup.okhttp:mockwebserver:2.5.0')
     // Force usage of support annotations in the test app, since it is internally used by the runner module.
     androidTestCompile "com.android.support:support-annotations:$versions.support"
     androidTestCompile 'com.android.support.test:runner:0.4.1'
