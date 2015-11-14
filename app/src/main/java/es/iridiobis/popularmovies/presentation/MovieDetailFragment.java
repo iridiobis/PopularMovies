@@ -27,12 +27,6 @@ import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-/**
- * A fragment representing a single Item detail screen.
- * This fragment is either contained in a {@link ItemListActivity}
- * in two-pane mode (on tablets) or a {@link MovieDetailActivity}
- * on handsets.
- */
 public class MovieDetailFragment extends Fragment {
     /**
      * The fragment argument representing the item ID that this fragment
