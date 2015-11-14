@@ -12,6 +12,8 @@ public class Movie {
     private String overview;
     @SerializedName("poster_path")
     private String posterPath;
+    @SerializedName("backdrop_path")
+    private String backdropPath;
     @SerializedName("release_date")
     private String releaseDate;
     @SerializedName("vote_average")
@@ -22,6 +24,7 @@ public class Movie {
         originalTitle = builder.originalTitle;
         overview = builder.overview;
         posterPath = builder.posterPath;
+        backdropPath = builder.backdropPath;
         releaseDate = builder.releaseDate;
         voteAverage = builder.voteAverage;
     }
@@ -30,12 +33,13 @@ public class Movie {
         return new Builder();
     }
 
-    public static Builder newBuilder(final Movie copy) {
+    public static Builder newBuilder(Movie copy) {
         Builder builder = new Builder();
         builder.id = copy.id;
         builder.originalTitle = copy.originalTitle;
         builder.overview = copy.overview;
         builder.posterPath = copy.posterPath;
+        builder.backdropPath = copy.backdropPath;
         builder.releaseDate = copy.releaseDate;
         builder.voteAverage = copy.voteAverage;
         return builder;
@@ -57,6 +61,10 @@ public class Movie {
         return posterPath;
     }
 
+    public String getBackdropPath() {
+        return backdropPath;
+    }
+
     public String getReleaseDate() {
         return releaseDate;
     }
@@ -73,6 +81,7 @@ public class Movie {
         private String originalTitle;
         private String overview;
         private String posterPath;
+        private String backdropPath;
         private String releaseDate;
         private double voteAverage;
 
@@ -120,6 +129,17 @@ public class Movie {
          */
         public Builder posterPath(final String val) {
             posterPath = val;
+            return this;
+        }
+
+        /**
+         * Sets the {@code backdropPath} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param val the {@code backdropPath} to set
+         * @return a reference to this Builder
+         */
+        public Builder backdropPath(String val) {
+            backdropPath = val;
             return this;
         }
 

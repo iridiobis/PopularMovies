@@ -1,5 +1,6 @@
 package es.iridiobis.popularmovies.android;
 
+import es.iridiobis.popularmovies.presentation.MovieDetailFragment;
 import es.iridiobis.popularmovies.presentation.MoviesFragment;
 
 /**
@@ -7,4 +8,5 @@ import es.iridiobis.popularmovies.presentation.MoviesFragment;
  */
 public interface PopularMoviesGraph {
     void inject(MoviesFragment moviesFragment);
+    void inject(MovieDetailFragment movieDetailFragment);
 }
