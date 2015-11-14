@@ -2,11 +2,11 @@ package es.iridiobis.popularmovies.presentation;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -76,6 +76,11 @@ public class MoviesFragment extends Fragment {
             discoveryMode = getArguments().getString(ARG_DISCOVERY_MODE);
             firstVisiblePosition = getArguments().getInt(ARG_FIRST_VISIBLE_POSITION);
         }
+        getActivity().setTitle(
+                MovieDiscoveryMode.POPULARITY.equals(discoveryMode)
+                        ? R.string.nav_by_popularity
+                        : R.string.nav_by_rating
+        );
     }
 
     @Override
@@ -86,6 +91,12 @@ public class MoviesFragment extends Fragment {
         ButterKnife.bind(this, view);
         adapter = new MoviesAdapter(getActivity());
         moviesGrid.setAdapter(adapter);
+        moviesGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                mListener.onFragmentInteraction(((Movie) adapter.getItem(i)).getId());
+            }
+        });
         discoverMovies(true);
         return view;
     }
@@ -93,6 +104,7 @@ public class MoviesFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+
         try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
@@ -116,7 +128,6 @@ public class MoviesFragment extends Fragment {
 
     public void showErrorFetchingMovies() {
         Toast.makeText(getActivity(), "Error fetching movies", Toast.LENGTH_LONG).show();
-
     }
 
     private void discoverMovies(final boolean refresh) {
@@ -163,8 +174,7 @@ public class MoviesFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        public void onFragmentInteraction(int selectedMovieId);
     }
 
 }

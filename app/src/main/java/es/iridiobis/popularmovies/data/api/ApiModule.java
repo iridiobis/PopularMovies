@@ -15,14 +15,15 @@ import retrofit.RxJavaCallAdapterFactory;
  */
 @Module
 public class ApiModule {
+    public static String BASE_URL = "http://api.themoviedb.org";
     @Provides
-    @Singleton
-    public Retrofit provideRetrofit(final OkHttpClient client) {
-        return new Retrofit.Builder()
-                .baseUrl("http://api.themoviedb.org")
+    public TheMovieDbService provideRetrofit(final OkHttpClient client) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .client(client)
                 .build();
+        return retrofit.create(TheMovieDbService.class);
     }
 }

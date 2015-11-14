@@ -2,6 +2,7 @@ package es.iridiobis.popularmovies.data.api;
 
 import android.util.Log;
 
+import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -23,6 +24,7 @@ public class DebugApiModule {
     @Singleton
     public OkHttpClient provideOkHttpClient() {
         final OkHttpClient client = new OkHttpClient();
+        client.networkInterceptors().add(new StethoInterceptor());
         client.interceptors().add(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {

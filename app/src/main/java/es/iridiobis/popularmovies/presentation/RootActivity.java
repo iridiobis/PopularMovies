@@ -110,7 +110,7 @@ public class RootActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-
+    public void onFragmentInteraction(final int selectedMovieId) {
+        startActivity(MovieDetailActivity.startIntent(this, selectedMovieId));
     }
 }
