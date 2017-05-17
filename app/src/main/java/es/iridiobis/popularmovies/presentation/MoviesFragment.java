@@ -42,6 +42,8 @@ public class MoviesFragment extends Fragment {
     private static final String ARG_DISCOVERY_MODE = "discovery_mode";
     @Inject
     MoviesRepository repository;
+    @BindView(R.id.progress)
+    View progress;
     @BindView(R.id.movies_grid)
     GridView moviesGrid;
     private String discoveryMode = MovieDiscoveryMode.POPULARITY;
@@ -109,6 +111,7 @@ public class MoviesFragment extends Fragment {
                 mListener.onFragmentInteraction(((Movie) adapter.getItem(i)).getId());
             }
         });
+        progress.setVisibility(View.VISIBLE);
         discoverMovies(false);
         return view;
     }
@@ -126,6 +129,7 @@ public class MoviesFragment extends Fragment {
     public boolean onOptionsItemSelected(final MenuItem item) {
         //noinspection SimplifiableIfStatement
         if (item.getItemId() == R.id.action_refresh) {
+            progress.setVisibility(View.VISIBLE);
             discoverMovies(true);
             return true;
         }
@@ -163,6 +167,8 @@ public class MoviesFragment extends Fragment {
             public void accept(List<Movie> movies) {
                 adapter.setMovies(movies);
                 moviesGrid.setSelection(firstVisiblePosition);
+                progress.setVisibility(View.INVISIBLE);
+                if (refresh) Toast.makeText(getActivity(), "Movies refreshed", Toast.LENGTH_SHORT).show();
             }
         };
 
@@ -170,6 +176,7 @@ public class MoviesFragment extends Fragment {
             @Override
             public void accept(Throwable throwable) {
                 showErrorFetchingMovies();
+                progress.setVisibility(View.INVISIBLE);
             }
         };
 
@@ -191,7 +198,7 @@ public class MoviesFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
 
-        public void onFragmentInteraction(int selectedMovieId);
+        void onFragmentInteraction(int selectedMovieId);
     }
 
 }

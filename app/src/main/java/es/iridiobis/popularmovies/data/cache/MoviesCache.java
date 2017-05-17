@@ -1,5 +1,6 @@
 package es.iridiobis.popularmovies.data.cache;
 
+import android.support.annotation.NonNull;
 import android.util.SparseArray;
 
 import java.util.ArrayList;
@@ -16,7 +17,6 @@ import es.iridiobis.popularmovies.domain.model.Movie;
 import es.iridiobis.popularmovies.domain.repositories.MoviesRepository;
 import io.reactivex.Observable;
 import io.reactivex.Single;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
@@ -36,6 +36,7 @@ public class MoviesCache implements MoviesRepository {
      */
     private final SparseArray<Movie> movieSparseArray;
     private final TheMovieDbService service;
+    private String lastMode;
 
     @Inject
     public MoviesCache(final TheMovieDbService service) {
@@ -45,10 +46,10 @@ public class MoviesCache implements MoviesRepository {
     }
 
     @Override
-    public Observable<List<Movie>> getMovies(final String mode, final boolean refresh) {
+    public Observable<List<Movie>> getMovies(@NonNull final String mode, final boolean refresh) {
         if (movieSparseArray.size() == 0) {
             return requestAndCache(mode);
-        } else if (refresh) {
+        } else if (refresh || !mode.equals(lastMode)) {
             return Observable.concat(
                     Observable.just(Collections.unmodifiableList(movies)),
                     requestAndCache(mode)
@@ -78,6 +79,7 @@ public class MoviesCache implements MoviesRepository {
                 .doOnNext(new Consumer<List<Movie>>() {
                     @Override
                     public void accept(@NonNull final List<Movie> movies) throws Exception {
+                        lastMode = mode;
                         MoviesCache.this.movies.clear();
                         MoviesCache.this.movies.addAll(movies);
                         for (Movie movie : movies) {

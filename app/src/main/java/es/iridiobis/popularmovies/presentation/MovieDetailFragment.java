@@ -94,10 +94,6 @@ public class MovieDetailFragment extends Fragment {
         ButterKnife.bind(this, rootView);
         toolbarLayout = ButterKnife.findById(getActivity(), R.id.toolbar_layout);
         backdropView = ButterKnife.findById(getActivity(), R.id.movie_detail_backdrop);
-        // Show the dummy content as text in a TextView.
-//        if (mItem != null) {
-//            ((TextView) rootView.findViewById(R.id.item_detail)).setText(mItem.details);
-//        }
 
         return rootView;
     }

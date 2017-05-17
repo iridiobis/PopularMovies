@@ -86,4 +86,9 @@ public class RootActivity extends AppCompatActivity
     public void onFragmentInteraction(final int selectedMovieId) {
         startActivity(MovieDetailActivity.startIntent(this, selectedMovieId));
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }
