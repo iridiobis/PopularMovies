@@ -15,14 +15,16 @@ apply plugin: 'com.jakewharton.hugo'
 Map<String, String> versions = [
         support         : '25.3.1',
         butterknife     : '8.5.1',
-        dagger          : '2.0.1',
+        dagger          : '2.10',
         retrofit        : '2.0.0-beta1',
         javax_annotation: '10.0-b28',
         guava           : '19.0-rc1',
         picasso         : '2.5.2',
         rxjava          : '1.0.14',
         rxandroid       : '1.0.1',
-        stetho          : '1.2.0'
+        stetho          : '1.2.0',
+        espresso        : '2.2.2',
+
 ]
 
 android {
@@ -66,7 +68,7 @@ dependencies {
     compile "io.reactivex:rxjava:$versions.rxjava"
     compile "com.google.guava:guava:$versions.guava"
     compile "com.squareup.picasso:picasso:$versions.picasso"
-    compile "com.google.dagger:dagger:$versions.dagger"
+    compile "com.google.dagger:dagger-android:$versions.dagger"
     compile "com.jakewharton:butterknife:$versions.butterknife"
     compile "com.facebook.stetho:stetho:$versions.stetho"
     compile "com.facebook.stetho:stetho-okhttp:$versions.stetho"
@@ -78,21 +80,24 @@ dependencies {
     compile "com.android.support:design:$versions.support"
 
     // Testing-only dependencies
+    androidTestCompile 'com.google.code.findbugs:jsr305:3.0.1'
     androidTestCompile "com.squareup.retrofit:retrofit-mock:$versions.retrofit"
     androidTestCompile('com.squareup.okhttp:mockwebserver:2.5.0')
     // Force usage of support annotations in the test app, since it is internally used by the runner module.
     androidTestCompile "com.android.support:support-annotations:$versions.support"
-    androidTestCompile 'com.android.support.test:runner:0.4.1'
-    androidTestCompile 'com.android.support.test:rules:0.4.1'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
+    androidTestCompile "com.android.support.test.espresso:espresso-core:$versions.espresso"
     // Espresso-contrib for DatePicker, RecyclerView, Drawer actions, Accessibility checks, CountingIdlingResource
-    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.1') {
+    androidTestCompile("com.android.support.test.espresso:espresso-contrib:$versions.espresso") {
+        exclude module: 'design'
+        exclude module: 'appcompat-v7'
         exclude module: 'support-annotations'
         exclude module: 'support-v4'
         exclude module: 'support-v13'
         exclude module: 'recyclerview-v7'
     }
     // UiAutomator Testing
-    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.1'
+    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
     androidTestCompile 'org.hamcrest:hamcrest-integration:1.3'
 }
