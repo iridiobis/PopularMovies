@@ -15,7 +15,7 @@ import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.iridiobis.popularmovies.R;
 import es.iridiobis.popularmovies.android.PopularMoviesApplication;
@@ -42,15 +42,15 @@ public class MovieDetailFragment extends Fragment {
     MoviesRepository repository;
 
     CollapsingToolbarLayout toolbarLayout;
-    @Bind(R.id.movie_detail_title)
+    @BindView(R.id.movie_detail_title)
     TextView titleView;
-    @Bind(R.id.movie_detail_year)
+    @BindView(R.id.movie_detail_year)
     TextView yearView;
-    @Bind(R.id.movie_detail_rating)
+    @BindView(R.id.movie_detail_rating)
     TextView ratingView;
-    @Bind(R.id.movie_detail_overview)
+    @BindView(R.id.movie_detail_overview)
     TextView overviewView;
-    @Bind(R.id.movie_detail_poster)
+    @BindView(R.id.movie_detail_poster)
     ImageView posterView;
 
     ImageView backdropView;

@@ -14,7 +14,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.iridiobis.popularmovies.R;
 import es.iridiobis.popularmovies.android.PopularMoviesApplication;
@@ -39,7 +39,7 @@ public class MoviesFragment extends Fragment {
     private static final String ARG_DISCOVERY_MODE = "discovery_mode";
     @Inject
     MoviesRepository repository;
-    @Bind(R.id.movies_grid)
+    @BindView(R.id.movies_grid)
     GridView moviesGrid;
     private String discoveryMode = MovieDiscoveryMode.POPULARITY;
     private int firstVisiblePosition;

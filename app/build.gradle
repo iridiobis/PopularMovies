@@ -15,8 +15,8 @@ apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.jakewharton.hugo'
 
 Map<String, String> versions = [
-        support         : '25.0.1',
-        butterknife     : '7.0.1',
+        support         : '25.3.1',
+        butterknife     : '8.5.1',
         dagger          : '2.0.1',
         retrofit        : '2.0.0-beta1',
         javax_annotation: '10.0-b28',
@@ -74,6 +74,7 @@ dependencies {
 
     apt "com.google.dagger:dagger-compiler:$versions.dagger"
     provided "org.glassfish:javax.annotation:$versions.javax_annotation"
+    apt "com.jakewharton:butterknife-compiler:$versions.butterknife"
 
 
     compile "com.android.support:support-v4:$versions.support"
