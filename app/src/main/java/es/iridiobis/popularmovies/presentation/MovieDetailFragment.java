@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.Locale;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -23,7 +25,6 @@ import es.iridiobis.popularmovies.data.api.TheMovieDbImageUriBuilder;
 import es.iridiobis.popularmovies.domain.model.Movie;
 import es.iridiobis.popularmovies.domain.repositories.MoviesRepository;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -107,9 +108,8 @@ public class MovieDetailFragment extends Fragment {
                 toolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
                 titleView.setText(movie.getOriginalTitle());
-                yearView.setText(movie.getReleaseDate());
-                //TODO make constant or res
-                ratingView.setText(String.format("%d/10", (long)movie.getVoteAverage()));
+                yearView.setText(movie.getReleaseDate().substring(0, 4));
+                ratingView.setText(String.format(Locale.US, "%.1f (%d)", movie.getVoteAverage(), (long) movie.getPopularity()));
                 overviewView.setText(movie.getOverview());
                 final Uri backdropUrl = TheMovieDbImageUriBuilder.buildW500Image(movie.getPosterPath());
                 Picasso.with(getActivity()).load(backdropUrl).into(backdropView);
