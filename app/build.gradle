@@ -6,12 +6,10 @@ buildscript {
 
     dependencies {
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
     }
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.jakewharton.hugo'
 
 Map<String, String> versions = [
@@ -56,7 +54,9 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    annotationProcessor "com.google.dagger:dagger-compiler:$versions.dagger"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$versions.butterknife"
+
     compile "com.android.support:appcompat-v7:$versions.support"
     compile "com.android.support:design:$versions.support"
     compile "com.squareup.retrofit:retrofit:$versions.retrofit"
@@ -71,10 +71,7 @@ dependencies {
     compile "com.facebook.stetho:stetho:$versions.stetho"
     compile "com.facebook.stetho:stetho-okhttp:$versions.stetho"
 
-
-    apt "com.google.dagger:dagger-compiler:$versions.dagger"
     provided "org.glassfish:javax.annotation:$versions.javax_annotation"
-    apt "com.jakewharton:butterknife-compiler:$versions.butterknife"
 
 
     compile "com.android.support:support-v4:$versions.support"
