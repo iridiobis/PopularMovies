@@ -1,9 +1,12 @@
 package es.iridiobis.popularmovies.presentation;
 
-import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -22,7 +25,6 @@ import es.iridiobis.popularmovies.domain.model.Movie;
 import es.iridiobis.popularmovies.domain.repositories.MovieDiscoveryMode;
 import es.iridiobis.popularmovies.domain.repositories.MoviesRepository;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -35,6 +37,7 @@ import io.reactivex.schedulers.Schedulers;
  * create an instance of this fragment.
  */
 public class MoviesFragment extends Fragment {
+
     private static final String ARG_FIRST_VISIBLE_POSITION = "first_visible_position";
     private static final String ARG_DISCOVERY_MODE = "discovery_mode";
     @Inject
@@ -59,7 +62,9 @@ public class MoviesFragment extends Fragment {
      * @param firstVisiblePosition First of the displayed movies to be visible.
      * @return A new instance of fragment MoviesFragment.
      */
-    public static MoviesFragment newInstance(final String mode, final int firstVisiblePosition) {
+    public static MoviesFragment newInstance(
+            final String mode,
+            final int firstVisiblePosition) {
         MoviesFragment fragment = new MoviesFragment();
         Bundle args = new Bundle();
         args.putString(ARG_DISCOVERY_MODE, mode);
@@ -76,6 +81,7 @@ public class MoviesFragment extends Fragment {
             discoveryMode = getArguments().getString(ARG_DISCOVERY_MODE);
             firstVisiblePosition = getArguments().getInt(ARG_FIRST_VISIBLE_POSITION);
         }
+        setHasOptionsMenu(true);
         getActivity().setTitle(
                 MovieDiscoveryMode.POPULARITY.equals(discoveryMode)
                         ? R.string.nav_by_popularity
@@ -84,8 +90,10 @@ public class MoviesFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater,
+            ViewGroup container,
+            Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_movies, container, false);
         ButterKnife.bind(this, view);
@@ -93,7 +101,11 @@ public class MoviesFragment extends Fragment {
         moviesGrid.setAdapter(adapter);
         moviesGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemClick(
+                    AdapterView<?> adapterView,
+                    View view,
+                    int i,
+                    long l) {
                 mListener.onFragmentInteraction(((Movie) adapter.getItem(i)).getId());
             }
         });
@@ -102,15 +114,29 @@ public class MoviesFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onCreateOptionsMenu(
+            final Menu menu,
+            final MenuInflater inflater) {
 
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+        inflater.inflate(R.menu.root, menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        //noinspection SimplifiableIfStatement
+        if (item.getItemId() == R.id.action_refresh) {
+            discoverMovies(true);
+            return true;
         }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onAttach(final Context context) {
+        super.onAttach(context);
+        mListener = (OnFragmentInteractionListener) getActivity();
     }
 
     @Override
@@ -164,6 +190,7 @@ public class MoviesFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
+
         public void onFragmentInteraction(int selectedMovieId);
     }
 
