@@ -2,10 +2,8 @@ package es.iridiobis.popularmovies.data.cache;
 
 import android.util.SparseArray;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -53,21 +51,21 @@ public class MoviesCache implements MoviesRepository {
             return requestAndCache(mode);
         } else if (refresh) {
             return Observable.concat(
-                    Observable.just(ImmutableList.copyOf(movies)),
+                    Observable.just(Collections.unmodifiableList(movies)),
                     requestAndCache(mode)
             );
         } else {
-            return Observable.<List<Movie>>just(ImmutableList.copyOf(movies));
+            return Observable.just(Collections.unmodifiableList(movies));
         }
     }
 
     @Override
     public Single<Movie> getMovie(final int movieId) {
-        final Optional<Movie> movie = Optional.fromNullable(movieSparseArray.get(movieId));
-        if (movie.isPresent())
-            return Single.just(movie.get());
-        else
+        final Movie movie = movieSparseArray.get(movieId);
+        if (movie == null)
             return service.discoverMovie(movieId, BuildConfig.THE_MOVIE_DB_API_KEY);
+        else
+            return Single.just(movie);
     }
 
     private Observable<List<Movie>> requestAndCache(final String mode) {
