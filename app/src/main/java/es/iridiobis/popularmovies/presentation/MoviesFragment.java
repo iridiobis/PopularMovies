@@ -21,10 +21,10 @@ import es.iridiobis.popularmovies.android.PopularMoviesApplication;
 import es.iridiobis.popularmovies.domain.model.Movie;
 import es.iridiobis.popularmovies.domain.repositories.MovieDiscoveryMode;
 import es.iridiobis.popularmovies.domain.repositories.MoviesRepository;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -132,25 +132,25 @@ public class MoviesFragment extends Fragment {
 
     private void discoverMovies(final boolean refresh) {
 
-        final Action1<List<Movie>> onNext = new Action1<List<Movie>>() {
+        final Consumer<List<Movie>> onNext = new Consumer<List<Movie>>() {
             @Override
-            public void call(List<Movie> movies) {
+            public void accept(List<Movie> movies) {
                 adapter.setMovies(movies);
                 moviesGrid.setSelection(firstVisiblePosition);
             }
         };
 
-        final Action1<Throwable> onError = new Action1<Throwable>() {
+        final Consumer<Throwable> onError = new Consumer<Throwable>() {
             @Override
-            public void call(Throwable throwable) {
+            public void accept(Throwable throwable) {
                 //TODO setRefreshing(false);
                 showErrorFetchingMovies();
             }
         };
 
-        final Action0 onComplete = new Action0() {
+        final Action onComplete = new Action() {
             @Override
-            public void call() {
+            public void run() {
                 //TODO setRefreshing(false);
             }
         };

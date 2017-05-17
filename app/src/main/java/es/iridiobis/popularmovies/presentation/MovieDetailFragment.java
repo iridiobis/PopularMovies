@@ -22,10 +22,10 @@ import es.iridiobis.popularmovies.android.PopularMoviesApplication;
 import es.iridiobis.popularmovies.data.api.TheMovieDbImageUriBuilder;
 import es.iridiobis.popularmovies.domain.model.Movie;
 import es.iridiobis.popularmovies.domain.repositories.MoviesRepository;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class MovieDetailFragment extends Fragment {
     /**
@@ -104,9 +104,9 @@ public class MovieDetailFragment extends Fragment {
 
     private void discoverMovie(final int movieId) {
 
-        final Action1<Movie> onNext = new Action1<Movie>() {
+        final Consumer<Movie> onNext = new Consumer<Movie>() {
             @Override
-            public void call(Movie movie) {
+            public void accept(Movie movie) {
                 toolbarLayout.setTitle(movie.getOriginalTitle());
                 toolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
@@ -122,27 +122,17 @@ public class MovieDetailFragment extends Fragment {
             }
         };
 
-        final Action1<Throwable> onError = new Action1<Throwable>() {
+        final Consumer<Throwable> onError = new Consumer<Throwable>() {
             @Override
-            public void call(Throwable throwable) {
-                //TODO setRefreshing(false);
+            public void accept(Throwable throwable) {
                 showErrorFetchingMovie();
             }
         };
 
-        final Action0 onComplete = new Action0() {
-            @Override
-            public void call() {
-                //TODO setRefreshing(false);
-            }
-        };
-
-        //TODO setRefreshing(true);
-
         repository.getMovie(movieId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(onNext, onError, onComplete);
+                .subscribe(onNext, onError);
     }
 
     private void showErrorFetchingMovie() {

@@ -16,9 +16,11 @@ import es.iridiobis.popularmovies.data.api.DiscoverMoviesResult;
 import es.iridiobis.popularmovies.data.api.TheMovieDbService;
 import es.iridiobis.popularmovies.domain.model.Movie;
 import es.iridiobis.popularmovies.domain.repositories.MoviesRepository;
-import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 /**
  * Implementation of the {@link MoviesRepository} that uses a SparseArray to cache the movies
@@ -60,25 +62,25 @@ public class MoviesCache implements MoviesRepository {
     }
 
     @Override
-    public Observable<Movie> getMovie(final int movieId) {
+    public Single<Movie> getMovie(final int movieId) {
         final Optional<Movie> movie = Optional.fromNullable(movieSparseArray.get(movieId));
         if (movie.isPresent())
-            return Observable.just(movie.get());
+            return Single.just(movie.get());
         else
             return service.discoverMovie(movieId, BuildConfig.THE_MOVIE_DB_API_KEY);
     }
 
     private Observable<List<Movie>> requestAndCache(final String mode) {
         return service.discoverMovies(mode, BuildConfig.THE_MOVIE_DB_API_KEY)
-                .map(new Func1<DiscoverMoviesResult, List<Movie>>() {
+                .map(new Function<DiscoverMoviesResult, List<Movie>>() {
                     @Override
-                    public List<Movie> call(final DiscoverMoviesResult discoverMoviesResult) {
+                    public List<Movie> apply(@NonNull final DiscoverMoviesResult discoverMoviesResult) throws Exception {
                         return discoverMoviesResult.getResults();
                     }
                 })
-                .doOnNext(new Action1<List<Movie>>() {
+                .doOnNext(new Consumer<List<Movie>>() {
                     @Override
-                    public void call(List<Movie> movies) {
+                    public void accept(@NonNull final List<Movie> movies) throws Exception {
                         MoviesCache.this.movies.clear();
                         MoviesCache.this.movies.addAll(movies);
                         for (Movie movie : movies) {

@@ -1,10 +1,11 @@
 package es.iridiobis.popularmovies.data.api;
 
 import es.iridiobis.popularmovies.domain.model.Movie;
-import retrofit.http.GET;
-import retrofit.http.Path;
-import retrofit.http.Query;
-import rx.Observable;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Retrofit interface for the services of themoviedb.org
@@ -14,5 +15,5 @@ public interface TheMovieDbService {
     Observable<DiscoverMoviesResult> discoverMovies(@Query("sort_by") String sortBy, @Query("api_key") String apiKey);
 
     @GET("/3/movie/{movieId}")
-    Observable<Movie> discoverMovie(@Path("movieId") int movieId, @Query("api_key") String apiKey);
+    Single<Movie> discoverMovie(@Path("movieId") int movieId, @Query("api_key") String apiKey);
 }
