@@ -46,7 +46,6 @@ public class MoviesCache implements MoviesRepository {
 
     @Override
     public Observable<List<Movie>> getMovies(final String mode, final boolean refresh) {
-        //TODO define a TTL for the cached data
         if (movieSparseArray.size() == 0) {
             return requestAndCache(mode);
         } else if (refresh) {

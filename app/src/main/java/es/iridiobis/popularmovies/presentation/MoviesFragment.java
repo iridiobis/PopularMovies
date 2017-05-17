@@ -97,7 +97,7 @@ public class MoviesFragment extends Fragment {
                 mListener.onFragmentInteraction(((Movie) adapter.getItem(i)).getId());
             }
         });
-        discoverMovies(true);
+        discoverMovies(false);
         return view;
     }
 
@@ -143,24 +143,14 @@ public class MoviesFragment extends Fragment {
         final Consumer<Throwable> onError = new Consumer<Throwable>() {
             @Override
             public void accept(Throwable throwable) {
-                //TODO setRefreshing(false);
                 showErrorFetchingMovies();
             }
         };
 
-        final Action onComplete = new Action() {
-            @Override
-            public void run() {
-                //TODO setRefreshing(false);
-            }
-        };
-
-        //TODO setRefreshing(true);
-
         repository.getMovies(discoveryMode, refresh)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(onNext, onError, onComplete);
+                .subscribe(onNext, onError);
     }
 
     /**
