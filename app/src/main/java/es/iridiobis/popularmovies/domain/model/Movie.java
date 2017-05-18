@@ -2,6 +2,8 @@ package es.iridiobis.popularmovies.domain.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * POJO for movies. Only contains information required by the business logic.
  */
@@ -18,8 +20,13 @@ public class Movie {
     private String releaseDate;
     @SerializedName("vote_average")
     private double voteAverage;
+    @SerializedName("popularity")
+    private double popularity;
+    @SerializedName("genre_ids")
+    private List<Integer> genreIds;
+    private List<String> genres;
 
-    private Movie(Builder builder) {
+    private Movie(final Builder builder) {
         id = builder.id;
         originalTitle = builder.originalTitle;
         overview = builder.overview;
@@ -27,13 +34,14 @@ public class Movie {
         backdropPath = builder.backdropPath;
         releaseDate = builder.releaseDate;
         voteAverage = builder.voteAverage;
+        popularity = builder.popularity;
     }
 
     public static Builder newBuilder() {
         return new Builder();
     }
 
-    public static Builder newBuilder(Movie copy) {
+    public static Builder newBuilder(final Movie copy) {
         Builder builder = new Builder();
         builder.id = copy.id;
         builder.originalTitle = copy.originalTitle;
@@ -42,6 +50,7 @@ public class Movie {
         builder.backdropPath = copy.backdropPath;
         builder.releaseDate = copy.releaseDate;
         builder.voteAverage = copy.voteAverage;
+        builder.popularity = copy.popularity;
         return builder;
     }
 
@@ -73,6 +82,22 @@ public class Movie {
         return voteAverage;
     }
 
+    public double getPopularity() {
+        return popularity;
+    }
+
+    public List<Integer> getGenreIds() {
+        return genreIds;
+    }
+
+    public List<String> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(final List<String> genres) {
+        this.genres = genres;
+    }
+
     /**
      * {@code Movie} builder static inner class.
      */
@@ -84,6 +109,7 @@ public class Movie {
         private String backdropPath;
         private String releaseDate;
         private double voteAverage;
+        private double popularity;
 
         private Builder() {
         }
@@ -172,6 +198,94 @@ public class Movie {
          */
         public Movie build() {
             return new Movie(this);
+        }
+
+        /**
+         * Sets the {@code id} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param id the {@code id} to set
+         * @return a reference to this Builder
+         */
+        public Builder withId(final int id) {
+            this.id = id;
+            return this;
+        }
+
+        /**
+         * Sets the {@code originalTitle} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param originalTitle the {@code originalTitle} to set
+         * @return a reference to this Builder
+         */
+        public Builder withOriginalTitle(final String originalTitle) {
+            this.originalTitle = originalTitle;
+            return this;
+        }
+
+        /**
+         * Sets the {@code overview} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param overview the {@code overview} to set
+         * @return a reference to this Builder
+         */
+        public Builder withOverview(final String overview) {
+            this.overview = overview;
+            return this;
+        }
+
+        /**
+         * Sets the {@code posterPath} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param posterPath the {@code posterPath} to set
+         * @return a reference to this Builder
+         */
+        public Builder withPosterPath(final String posterPath) {
+            this.posterPath = posterPath;
+            return this;
+        }
+
+        /**
+         * Sets the {@code backdropPath} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param backdropPath the {@code backdropPath} to set
+         * @return a reference to this Builder
+         */
+        public Builder withBackdropPath(final String backdropPath) {
+            this.backdropPath = backdropPath;
+            return this;
+        }
+
+        /**
+         * Sets the {@code releaseDate} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param releaseDate the {@code releaseDate} to set
+         * @return a reference to this Builder
+         */
+        public Builder withReleaseDate(final String releaseDate) {
+            this.releaseDate = releaseDate;
+            return this;
+        }
+
+        /**
+         * Sets the {@code voteAverage} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param voteAverage the {@code voteAverage} to set
+         * @return a reference to this Builder
+         */
+        public Builder withVoteAverage(final double voteAverage) {
+            this.voteAverage = voteAverage;
+            return this;
+        }
+
+        /**
+         * Sets the {@code popularity} and returns a reference to this Builder so that the methods can be chained together.
+         *
+         * @param popularity the {@code popularity} to set
+         * @return a reference to this Builder
+         */
+        public Builder withPopularity(final double popularity) {
+            this.popularity = popularity;
+            return this;
         }
     }
 }

@@ -3,13 +3,13 @@ package es.iridiobis.popularmovies.domain.repositories;
 import java.util.List;
 
 import es.iridiobis.popularmovies.domain.model.Movie;
-import rx.Observable;
+import io.reactivex.Observable;
+import io.reactivex.Single;
 
-/**
- * Created by iridio on 16/09/15.
- */
 public interface MoviesRepository {
+
     Observable<List<Movie>> getMovies(String mode, boolean refresh);
 
-    Observable<Movie> getMovie(int movieId);
+    Single<Movie> getMovie(int movieId);
+
 }

@@ -15,9 +15,6 @@ import java.util.List;
 import es.iridiobis.popularmovies.data.api.TheMovieDbImageUriBuilder;
 import es.iridiobis.popularmovies.domain.model.Movie;
 
-/**
- * Created by iridio on 16/09/15.
- */
 public class MoviesAdapter extends BaseAdapter {
 
     private final Context context;
