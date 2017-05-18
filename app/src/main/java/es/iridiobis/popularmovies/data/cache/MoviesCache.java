@@ -18,10 +18,11 @@ import es.iridiobis.popularmovies.data.api.TheMovieDbService;
 import es.iridiobis.popularmovies.domain.model.Movie;
 import es.iridiobis.popularmovies.domain.repositories.MovieDiscoveryMode;
 import es.iridiobis.popularmovies.domain.repositories.MoviesRepository;
+import io.reactivex.Completable;
+import io.reactivex.CompletableSource;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.SingleSource;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
 /**
@@ -57,7 +58,7 @@ public class MoviesCache implements MoviesRepository {
             @NonNull final String mode,
             final boolean refresh) {
         if (movieSparseArray.size() == 0) {
-            return requestAndCache(mode);
+            return checkGenres().andThen(requestAndCache(mode));
         } else if (refresh || !mode.equals(lastMode)) {
             return Observable.concat(
                     Observable.just(Collections.unmodifiableList(movies)),
@@ -68,19 +69,29 @@ public class MoviesCache implements MoviesRepository {
         }
     }
 
+    private Completable checkGenres() {
+        if (genres.size() > 0) {
+            return Completable.complete();
+        } else {
+            return service.discoverGenres(BuildConfig.THE_MOVIE_DB_API_KEY)
+                    .flatMapCompletable(new Function<GenresResult, CompletableSource>() {
+                        @Override
+                        public CompletableSource apply(@io.reactivex.annotations.NonNull final GenresResult genresResult) throws Exception {
+                            genres.clear();
+                            for (final Genre genre : genresResult.getGenres()) {
+                                genres.put(genre.getId(), genre.getName());
+                            }
+                            return Completable.complete();
+                        }
+                    });
+        }
+    }
+
     @Override
     public Single<Movie> getMovie(final int movieId) {
         final Movie movie = movieSparseArray.get(movieId);
         if (movie == null) {
             return service.discoverMovie(movieId, BuildConfig.THE_MOVIE_DB_API_KEY)
-                    .flatMap(new Function<Movie, SingleSource<? extends Movie>>() {
-                        @Override
-                        public SingleSource<? extends Movie> apply(@io.reactivex.annotations.NonNull final Movie movie) throws Exception {
-                            return getGenres(movie);
-                        }
-                    });
-        } else if (movie.getGenres() == null) {
-            return Single.just(movie)
                     .flatMap(new Function<Movie, SingleSource<? extends Movie>>() {
                         @Override
                         public SingleSource<? extends Movie> apply(@io.reactivex.annotations.NonNull final Movie movie) throws Exception {
@@ -110,11 +121,7 @@ public class MoviesCache implements MoviesRepository {
                             for (final Genre genre : genresResult.getGenres()) {
                                 genres.put(genre.getId(), genre.getName());
                             }
-                            final List<String> result = new ArrayList<>(movie.getGenreIds().size());
-                            for (final int genreId : movie.getGenreIds()) {
-                                result.add(genres.get(genreId));
-                            }
-                            movie.setGenres(result);
+                            movie.setGenres(generateGenres(movie));
                             return Single.just(movie);
                         }
                     });
@@ -127,20 +134,25 @@ public class MoviesCache implements MoviesRepository {
                 .map(new Function<DiscoverMoviesResult, List<Movie>>() {
                     @Override
                     public List<Movie> apply(@NonNull final DiscoverMoviesResult discoverMoviesResult) throws Exception {
-                        return discoverMoviesResult.getResults();
-                    }
-                })
-                .doOnNext(new Consumer<List<Movie>>() {
-                    @Override
-                    public void accept(@NonNull final List<Movie> movies) throws Exception {
+                        final List<Movie> movies = discoverMoviesResult.getResults();
                         lastMode = mode;
                         MoviesCache.this.movies.clear();
                         MoviesCache.this.movies.addAll(movies);
                         for (Movie movie : movies) {
                             movieSparseArray.put(movie.getId(), movie);
+                            movie.setGenres(generateGenres(movie));
                         }
+                        return movies;
                     }
                 });
+    }
+
+    private List<String> generateGenres(final Movie movie) {
+        final List<String> result = new ArrayList<>(movie.getGenreIds().size());
+        for (final int genreId : movie.getGenreIds()) {
+            result.add(genres.get(genreId));
+        }
+        return result;
     }
 
 }
