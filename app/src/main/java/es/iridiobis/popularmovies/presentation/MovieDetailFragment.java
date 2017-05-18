@@ -29,6 +29,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class MovieDetailFragment extends Fragment {
+
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
@@ -53,6 +54,8 @@ public class MovieDetailFragment extends Fragment {
     TextView overviewView;
     @BindView(R.id.movie_detail_poster)
     ImageView posterView;
+    @BindView(R.id.movie_detail_genres)
+    TextView genresView;
 
     ImageView backdropView;
 
@@ -89,8 +92,10 @@ public class MovieDetailFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater,
+            ViewGroup container,
+            Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
         ButterKnife.bind(this, rootView);
         toolbarLayout = ButterKnife.findById(getActivity(), R.id.toolbar_layout);
@@ -115,6 +120,13 @@ public class MovieDetailFragment extends Fragment {
                 Picasso.with(getActivity()).load(backdropUrl).into(backdropView);
                 final Uri posterUrl = TheMovieDbImageUriBuilder.buildW185Image(movie.getPosterPath());
                 Picasso.with(getActivity()).load(posterUrl).into(posterView);
+
+                final StringBuilder genres = new StringBuilder();
+                for(final String genre : movie.getGenres()) {
+                    genres.append(genre).append(", ");
+                }
+                genres.delete(genres.length() - 2, genres.length());
+                genresView.setText(genres);
             }
         };
 

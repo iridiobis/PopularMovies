@@ -20,4 +20,7 @@ public interface TheMovieDbService {
     @GET("/3/movie/{movieId}")
     Single<Movie> discoverMovie(@Path("movieId") int movieId, @Query("api_key") String apiKey);
 
+    @GET("/3/genre/movie/list")
+    Single<GenresResult> discoverGenres(@Query("api_key") String apiKey);
+
 }

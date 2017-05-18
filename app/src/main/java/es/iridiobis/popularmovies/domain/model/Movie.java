@@ -2,6 +2,8 @@ package es.iridiobis.popularmovies.domain.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * POJO for movies. Only contains information required by the business logic.
  */
@@ -20,6 +22,9 @@ public class Movie {
     private double voteAverage;
     @SerializedName("popularity")
     private double popularity;
+    @SerializedName("genre_ids")
+    private List<Integer> genreIds;
+    private List<String> genres;
 
     private Movie(final Builder builder) {
         id = builder.id;
@@ -79,6 +84,18 @@ public class Movie {
 
     public double getPopularity() {
         return popularity;
+    }
+
+    public List<Integer> getGenreIds() {
+        return genreIds;
+    }
+
+    public List<String> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(final List<String> genres) {
+        this.genres = genres;
     }
 
     /**
