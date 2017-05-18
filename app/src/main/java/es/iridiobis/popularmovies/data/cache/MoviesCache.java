@@ -14,6 +14,7 @@ import es.iridiobis.popularmovies.BuildConfig;
 import es.iridiobis.popularmovies.data.api.DiscoverMoviesResult;
 import es.iridiobis.popularmovies.data.api.TheMovieDbService;
 import es.iridiobis.popularmovies.domain.model.Movie;
+import es.iridiobis.popularmovies.domain.repositories.MovieDiscoveryMode;
 import es.iridiobis.popularmovies.domain.repositories.MoviesRepository;
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -26,6 +27,7 @@ import io.reactivex.functions.Function;
  */
 @Singleton
 public class MoviesCache implements MoviesRepository {
+
     private static final int MOVIES_PER_PAGE = 20;
     /**
      * The movies list contains the ORDERED list of movies.
@@ -46,7 +48,9 @@ public class MoviesCache implements MoviesRepository {
     }
 
     @Override
-    public Observable<List<Movie>> getMovies(@NonNull final String mode, final boolean refresh) {
+    public Observable<List<Movie>> getMovies(
+            @NonNull final String mode,
+            final boolean refresh) {
         if (movieSparseArray.size() == 0) {
             return requestAndCache(mode);
         } else if (refresh || !mode.equals(lastMode)) {
@@ -69,7 +73,8 @@ public class MoviesCache implements MoviesRepository {
     }
 
     private Observable<List<Movie>> requestAndCache(final String mode) {
-        return service.discoverMovies(mode, BuildConfig.THE_MOVIE_DB_API_KEY)
+        final Integer minCount = MovieDiscoveryMode.RATING.equals(mode)? 1000 : null;
+        return service.discoverMovies(mode, minCount, BuildConfig.THE_MOVIE_DB_API_KEY)
                 .map(new Function<DiscoverMoviesResult, List<Movie>>() {
                     @Override
                     public List<Movie> apply(@NonNull final DiscoverMoviesResult discoverMoviesResult) throws Exception {

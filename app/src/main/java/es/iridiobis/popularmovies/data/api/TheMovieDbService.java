@@ -11,9 +11,13 @@ import retrofit2.http.Query;
  * Retrofit interface for the services of themoviedb.org
  */
 public interface TheMovieDbService {
+
     @GET("/3/discover/movie")
-    Observable<DiscoverMoviesResult> discoverMovies(@Query("sort_by") String sortBy, @Query("api_key") String apiKey);
+    Observable<DiscoverMoviesResult> discoverMovies(@Query("sort_by") String sortBy, @Query("vote_count.gte") Integer minVoteCount, @Query("api_key")
+            String
+            apiKey);
 
     @GET("/3/movie/{movieId}")
     Single<Movie> discoverMovie(@Path("movieId") int movieId, @Query("api_key") String apiKey);
+
 }

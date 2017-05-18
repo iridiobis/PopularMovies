@@ -2,9 +2,6 @@ package es.iridiobis.popularmovies.data.api;
 
 import android.net.Uri;
 
-/**
- * Created by iridio on 01/11/15.
- */
 public final class TheMovieDbImageUriBuilder {
     private static final String URL_ROOT = "http://image.tmdb.org/t/p/w%d/%s";
     private static final int W185_WIDTH = 185;
