@@ -24,11 +24,7 @@
         <activity
             android:name=".presentation.MovieDetailActivity"
             android:label="@string/title_item_detail"
-            android:parentActivityName=".presentation.RootActivity"
             android:theme="@style/AppTheme" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="es.iridiobis.popularmovies.presentation.RootActivity" />
         </activity>
     </application>
 

@@ -13,21 +13,23 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.Locale;
+
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.iridiobis.popularmovies.R;
 import es.iridiobis.popularmovies.android.PopularMoviesApplication;
 import es.iridiobis.popularmovies.data.api.TheMovieDbImageUriBuilder;
 import es.iridiobis.popularmovies.domain.model.Movie;
 import es.iridiobis.popularmovies.domain.repositories.MoviesRepository;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class MovieDetailFragment extends Fragment {
+
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
@@ -42,16 +44,18 @@ public class MovieDetailFragment extends Fragment {
     MoviesRepository repository;
 
     CollapsingToolbarLayout toolbarLayout;
-    @Bind(R.id.movie_detail_title)
+    @BindView(R.id.movie_detail_title)
     TextView titleView;
-    @Bind(R.id.movie_detail_year)
+    @BindView(R.id.movie_detail_year)
     TextView yearView;
-    @Bind(R.id.movie_detail_rating)
+    @BindView(R.id.movie_detail_rating)
     TextView ratingView;
-    @Bind(R.id.movie_detail_overview)
+    @BindView(R.id.movie_detail_overview)
     TextView overviewView;
-    @Bind(R.id.movie_detail_poster)
+    @BindView(R.id.movie_detail_poster)
     ImageView posterView;
+    @BindView(R.id.movie_detail_genres)
+    TextView genresView;
 
     ImageView backdropView;
 
@@ -88,61 +92,55 @@ public class MovieDetailFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater,
+            ViewGroup container,
+            Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
         ButterKnife.bind(this, rootView);
         toolbarLayout = ButterKnife.findById(getActivity(), R.id.toolbar_layout);
         backdropView = ButterKnife.findById(getActivity(), R.id.movie_detail_backdrop);
-        // Show the dummy content as text in a TextView.
-//        if (mItem != null) {
-//            ((TextView) rootView.findViewById(R.id.item_detail)).setText(mItem.details);
-//        }
 
         return rootView;
     }
 
     private void discoverMovie(final int movieId) {
 
-        final Action1<Movie> onNext = new Action1<Movie>() {
+        final Consumer<Movie> onNext = new Consumer<Movie>() {
             @Override
-            public void call(Movie movie) {
+            public void accept(Movie movie) {
                 toolbarLayout.setTitle(movie.getOriginalTitle());
                 toolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
                 titleView.setText(movie.getOriginalTitle());
-                yearView.setText(movie.getReleaseDate());
-                //TODO make constant or res
-                ratingView.setText(String.format("%d/10", (long)movie.getVoteAverage()));
+                yearView.setText(movie.getReleaseDate().substring(0, 4));
+                ratingView.setText(String.format(Locale.US, "%.1f (%d)", movie.getVoteAverage(), (long) movie.getPopularity()));
                 overviewView.setText(movie.getOverview());
                 final Uri backdropUrl = TheMovieDbImageUriBuilder.buildW500Image(movie.getPosterPath());
                 Picasso.with(getActivity()).load(backdropUrl).into(backdropView);
                 final Uri posterUrl = TheMovieDbImageUriBuilder.buildW185Image(movie.getPosterPath());
                 Picasso.with(getActivity()).load(posterUrl).into(posterView);
+
+                final StringBuilder genres = new StringBuilder();
+                for(final String genre : movie.getGenres()) {
+                    genres.append(genre).append(", ");
+                }
+                genres.delete(genres.length() - 2, genres.length());
+                genresView.setText(genres);
             }
         };
 
-        final Action1<Throwable> onError = new Action1<Throwable>() {
+        final Consumer<Throwable> onError = new Consumer<Throwable>() {
             @Override
-            public void call(Throwable throwable) {
-                //TODO setRefreshing(false);
+            public void accept(Throwable throwable) {
                 showErrorFetchingMovie();
             }
         };
 
-        final Action0 onComplete = new Action0() {
-            @Override
-            public void call() {
-                //TODO setRefreshing(false);
-            }
-        };
-
-        //TODO setRefreshing(true);
-
         repository.getMovie(movieId)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(onNext, onError, onComplete);
+                .subscribe(onNext, onError);
     }
 
     private void showErrorFetchingMovie() {

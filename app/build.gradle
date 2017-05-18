@@ -6,30 +6,29 @@ buildscript {
 
     dependencies {
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
     }
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.jakewharton.hugo'
 
 Map<String, String> versions = [
-        support         : '23.1.0',
-        butterknife     : '7.0.1',
-        dagger          : '2.0.1',
-        retrofit        : '2.0.0-beta1',
-        javax_annotation: '10.0-b28',
-        guava           : '19.0-rc1',
-        picasso         : '2.5.2',
-        rxjava          : '1.0.14',
-        rxandroid       : '1.0.1',
-        stetho          : '1.2.0'
+        support    : '25.3.1',
+        butterknife: '8.5.1',
+        dagger     : '2.10',
+        retrofit   : '2.3.0',
+        javax      : '1.0',
+        picasso    : '2.5.2',
+        rxandroid  : '2.0.1',
+        rxjava     : '2.0.6',
+        stetho     : '1.5.0',
+        espresso   : '2.2.2',
+
 ]
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
 
     def keysPropertiesFile = rootProject.file("keys.properties")
     def keysProperties = new Properties()
@@ -38,9 +37,9 @@ android {
     defaultConfig {
         applicationId "es.iridiobis.popularmovies"
         minSdkVersion 16
-        targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion 25
+        versionCode 2
+        versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -56,45 +55,43 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    annotationProcessor "com.google.dagger:dagger-compiler:$versions.dagger"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$versions.butterknife"
+
     compile "com.android.support:appcompat-v7:$versions.support"
     compile "com.android.support:design:$versions.support"
-    compile "com.squareup.retrofit:retrofit:$versions.retrofit"
-    compile "com.squareup.retrofit:adapter-rxjava:$versions.retrofit"
-    compile "com.squareup.retrofit:converter-gson:$versions.retrofit"
-    compile "io.reactivex:rxandroid:$versions.rxandroid"
-    compile "io.reactivex:rxjava:$versions.rxjava"
-    compile "com.google.guava:guava:$versions.guava"
+    compile 'com.android.support.constraint:constraint-layout:1.0.1'
+    compile "com.squareup.retrofit2:retrofit:$versions.retrofit"
+    compile "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit"
+    compile "com.squareup.retrofit2:converter-gson:$versions.retrofit"
+    compile "io.reactivex.rxjava2:rxandroid:$versions.rxandroid"
+    compile "io.reactivex.rxjava2:rxjava:$versions.rxjava"
     compile "com.squareup.picasso:picasso:$versions.picasso"
-    compile "com.google.dagger:dagger:$versions.dagger"
+    compile "com.google.dagger:dagger-android:$versions.dagger"
     compile "com.jakewharton:butterknife:$versions.butterknife"
     compile "com.facebook.stetho:stetho:$versions.stetho"
-    compile "com.facebook.stetho:stetho-okhttp:$versions.stetho"
+    compile "com.facebook.stetho:stetho-okhttp3:$versions.stetho"
 
-
-    apt "com.google.dagger:dagger-compiler:$versions.dagger"
-    provided "org.glassfish:javax.annotation:$versions.javax_annotation"
-
-
-    compile "com.android.support:support-v4:$versions.support"
-    compile "com.android.support:design:$versions.support"
+    provided "javax.annotation:jsr250-api:$versions.javax"
 
     // Testing-only dependencies
-    androidTestCompile "com.squareup.retrofit:retrofit-mock:$versions.retrofit"
-    androidTestCompile ('com.squareup.okhttp:mockwebserver:2.5.0')
+    androidTestCompile 'com.google.code.findbugs:jsr305:3.0.1'
+    androidTestCompile "com.squareup.retrofit2:retrofit-mock:$versions.retrofit"
+    androidTestCompile('com.squareup.okhttp:mockwebserver:2.7.2')
     // Force usage of support annotations in the test app, since it is internally used by the runner module.
     androidTestCompile "com.android.support:support-annotations:$versions.support"
-    androidTestCompile 'com.android.support.test:runner:0.4.1'
-    androidTestCompile 'com.android.support.test:rules:0.4.1'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
+    androidTestCompile "com.android.support.test.espresso:espresso-core:$versions.espresso"
     // Espresso-contrib for DatePicker, RecyclerView, Drawer actions, Accessibility checks, CountingIdlingResource
-    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.1') {
+    androidTestCompile("com.android.support.test.espresso:espresso-contrib:$versions.espresso") {
+        exclude module: 'design'
+        exclude module: 'appcompat-v7'
         exclude module: 'support-annotations'
         exclude module: 'support-v4'
-        exclude module: 'support-v13'
         exclude module: 'recyclerview-v7'
     }
     // UiAutomator Testing
-    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.1'
+    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
     androidTestCompile 'org.hamcrest:hamcrest-integration:1.3'
 }

@@ -5,9 +5,6 @@ import android.content.Context;
 
 import com.facebook.stetho.Stetho;
 
-/**
- * Created by iridio on 16/09/15.
- */
 public class PopularMoviesApplication extends Application {
     private PopularMoviesComponent component;
 

@@ -3,6 +3,8 @@ package es.iridiobis.popularmovies.presentation;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,12 +33,12 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MoviesFragment.OnFragmentInteractionListener} interface
+ * {@link DetailedMoviesFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link MoviesFragment#newInstance} factory method to
+ * Use the {@link DetailedMoviesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MoviesFragment extends Fragment {
+public class DetailedMoviesFragment extends Fragment {
 
     private static final String ARG_FIRST_VISIBLE_POSITION = "first_visible_position";
     private static final String ARG_DISCOVERY_MODE = "discovery_mode";
@@ -44,15 +46,14 @@ public class MoviesFragment extends Fragment {
     MoviesRepository repository;
     @BindView(R.id.progress)
     View progress;
-    @BindView(R.id.movies_grid)
-    GridView moviesGrid;
+    @BindView(R.id.movies_list)
+    RecyclerView moviesList;
     private String discoveryMode = MovieDiscoveryMode.POPULARITY;
-    private int firstVisiblePosition;
-    private MoviesAdapter adapter;
+    private DetailedMoviesAdapter adapter;
 
     private OnFragmentInteractionListener mListener;
 
-    public MoviesFragment() {
+    public DetailedMoviesFragment() {
         // Required empty public constructor
     }
 
@@ -64,10 +65,10 @@ public class MoviesFragment extends Fragment {
      * @param firstVisiblePosition First of the displayed movies to be visible.
      * @return A new instance of fragment MoviesFragment.
      */
-    public static MoviesFragment newInstance(
+    public static DetailedMoviesFragment newInstance(
             final String mode,
             final int firstVisiblePosition) {
-        MoviesFragment fragment = new MoviesFragment();
+        DetailedMoviesFragment fragment = new DetailedMoviesFragment();
         Bundle args = new Bundle();
         args.putString(ARG_DISCOVERY_MODE, mode);
         args.putInt(ARG_FIRST_VISIBLE_POSITION, firstVisiblePosition);
@@ -81,7 +82,6 @@ public class MoviesFragment extends Fragment {
         PopularMoviesApplication.get(getActivity()).getComponent().inject(this);
         if (getArguments() != null) {
             discoveryMode = getArguments().getString(ARG_DISCOVERY_MODE);
-            firstVisiblePosition = getArguments().getInt(ARG_FIRST_VISIBLE_POSITION);
         }
         setHasOptionsMenu(true);
         getActivity().setTitle(
@@ -97,20 +97,13 @@ public class MoviesFragment extends Fragment {
             ViewGroup container,
             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_movies, container, false);
+        final View view = inflater.inflate(R.layout.fragment_detailed_movies, container, false);
         ButterKnife.bind(this, view);
-        adapter = new MoviesAdapter(getActivity());
-        moviesGrid.setAdapter(adapter);
-        moviesGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(
-                    AdapterView<?> adapterView,
-                    View view,
-                    int i,
-                    long l) {
-                mListener.onFragmentInteraction(((Movie) adapter.getItem(i)).getId());
-            }
-        });
+        adapter = new DetailedMoviesAdapter(getActivity(), mListener);
+        final LinearLayoutManager transactionOverviewLinearLayoutManager = new LinearLayoutManager(getActivity());
+        moviesList.setAdapter(adapter);
+        moviesList.setLayoutManager(transactionOverviewLinearLayoutManager);
+
         progress.setVisibility(View.VISIBLE);
         discoverMovies(false);
         return view;
@@ -144,13 +137,6 @@ public class MoviesFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        final int firstVisible = moviesGrid.getFirstVisiblePosition();
-        getArguments().putInt(ARG_FIRST_VISIBLE_POSITION, firstVisible);
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
@@ -166,7 +152,6 @@ public class MoviesFragment extends Fragment {
             @Override
             public void accept(List<Movie> movies) {
                 adapter.setMovies(movies);
-                moviesGrid.setSelection(firstVisiblePosition);
                 progress.setVisibility(View.INVISIBLE);
                 if (refresh) Toast.makeText(getActivity(), "Movies refreshed", Toast.LENGTH_SHORT).show();
             }
