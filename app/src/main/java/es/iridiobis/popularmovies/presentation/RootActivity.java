@@ -14,7 +14,7 @@ import es.iridiobis.popularmovies.R;
 import es.iridiobis.popularmovies.domain.repositories.MovieDiscoveryMode;
 
 public class RootActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MoviesFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, DetailedMoviesFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +23,7 @@ public class RootActivity extends AppCompatActivity
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, MoviesFragment.newInstance(MovieDiscoveryMode.POPULARITY, -1))
+                    .add(R.id.container, DetailedMoviesFragment.newInstance(MovieDiscoveryMode.POPULARITY, -1))
                     .commit();
         }
 
@@ -61,7 +61,7 @@ public class RootActivity extends AppCompatActivity
 
 // Replace whatever is in the fragment_container view with this fragment,
 // and add the transaction to the back stack if needed
-            transaction.replace(R.id.container, MoviesFragment.newInstance(MovieDiscoveryMode.POPULARITY, -1));
+            transaction.replace(R.id.container, DetailedMoviesFragment.newInstance(MovieDiscoveryMode.POPULARITY, -1));
 
 // Commit the transaction
             transaction.commit();
@@ -71,7 +71,7 @@ public class RootActivity extends AppCompatActivity
 
 // Replace whatever is in the fragment_container view with this fragment,
 // and add the transaction to the back stack if needed
-            transaction.replace(R.id.container, MoviesFragment.newInstance(MovieDiscoveryMode.RATING, -1));
+            transaction.replace(R.id.container, DetailedMoviesFragment.newInstance(MovieDiscoveryMode.RATING, -1));
 
 // Commit the transaction
             transaction.commit();
